@@ -1,12 +1,8 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { render } from "react-dom";
+import { connect } from "react-redux";
 
 class Counter extends Component {
-  state = {
-    counter: 0
-  };
-
   render() {
     return (
       <View style={styles.container}>
@@ -17,11 +13,19 @@ class Counter extends Component {
             justifyContent: "space-around"
           }}
         >
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              this.props.increaseCounter();
+            }}
+          >
             <Text>Increase</Text>
           </TouchableOpacity>
-          <Text>0</Text>
-          <TouchableOpacity>
+          <Text>{this.props.counter}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              this.props.decreaseCounter();
+            }}
+          >
             <Text>Decrease</Text>
           </TouchableOpacity>
         </View>
@@ -29,6 +33,21 @@ class Counter extends Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    counter: state.counter
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    increaseCounter: () => dispatch({ type: "INCREASE_COUNTER" }),
+    decreaseCounter: () => dispatch({ type: "DECREASE_COUNTER" })
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Counter);
 
 const styles = StyleSheet.create({
   container: {
